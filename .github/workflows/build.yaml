@@ -27,7 +27,7 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/xaos613/docker_build:1
-    
+
       - name: Slack Notification on Success
         if: success()
         uses: 8398a7/action-slack@v3
