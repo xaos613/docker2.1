@@ -28,13 +28,20 @@ jobs:
           push: true
           tags: ghcr.io/xaos613/docker_build:1
     
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
+      - name: Slack Notification on Success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
         env:
-         SLACK_CHANNEL: general
-         SLACK_COLOR: ${{ job.status }}
-         SLACK_ICON: https://github.com/rtCamp.png?size=48
-         SLACK_MESSAGE: 'Post Content :rocket:'
-         SLACK_TITLE: 'Looks like job is done :)'
-         SLACK_USERNAME: xaos613
-         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }} ### full address with h>
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack Notification on Failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
